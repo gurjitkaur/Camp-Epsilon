@@ -1,6 +1,3 @@
-from time import clock
-from GameState import *
-
 ##===================================================================
 ## Transitions
 

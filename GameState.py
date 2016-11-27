@@ -1,8 +1,9 @@
-from StateMachine import *
-from DataFile_Handler import *
+import StateMachine
+import DataFile_Handler
+import Tkinter
+import GUI_Manager2
+
 from time import clock
-from GUI_Manager import *
-from Tkinter import *
 
 ##===================================================================
 ## GameState
@@ -11,39 +12,55 @@ Char = type ("Char", (object,), {})
 
 class GameState(Char):
     def __init__(self):
-        self.StateMachine = StateMachine(self, self)
-        self.DataFile = DataFile_Handler("ACT1.txt")
-        self.Keyword = ""
+        ## Initialize References
+        self.StateMachine = StateMachine.StateMachine(self, self)
+        self.DataFile = DataFile_Handler.DataFile_Handler("ACT1.txt")
         self.Line = ""
 
-        ## GUI_Manager
-        self.tk = tkinter
-        self.GUI_Manager = GUI_Manager
+        ## Set States
+        self.StateMachine.addState("StartState", StateMachine.StartState(self.StateMachine))
+        self.StateMachine.addState("TransitionState", StateMachine.TransitionState(self.StateMachine))
+        self.StateMachine.addState("ReadState", StateMachine.ReadState(self.StateMachine))
+        self.StateMachine.addState("WaitState", StateMachine.WaitState(self.StateMachine))
 
-        ## States
-        self.StateMachine.addState("StartState", StartState(self.StateMachine))
-        self.StateMachine.addState("TransitionState", TransitionState(self.StateMachine))
-        self.StateMachine.addState("ReadState", ReadState(self.StateMachine))
-        self.StateMachine.addState("WaitState", WaitState(self.StateMachine))
+        ## Set Transitions
+        self.StateMachine.addTransition("toStartState", StateMachine.StateTransition("StartState"))
+        self.StateMachine.addTransition("toTransitionState", StateMachine.StateTransition("TransitionState"))
+        self.StateMachine.addTransition("toReadState", StateMachine.StateTransition("ReadState"))
+        self.StateMachine.addTransition("toWaitState", StateMachine.StateTransition("WaitState"))
 
-        ## Transitions
-        self.StateMachine.addTransition("toStartState", StateTransition("StartState"))
-        self.StateMachine.addTransition("toTransitionState", StateTransition("TransitionState"))
-        self.StateMachine.addTransition("toReadState", StateTransition("ReadState"))
-        self.StateMachine.addTransition("toWaitState", StateTransition("WaitState"))
-
-        ## Set first state to start state
+        ## Set first state to Transition State
         self.StateMachine.setState("StartState")
 
+        ## Initialize Tkinter and GUI_Manager
+        self.tk = Tkinter.Tk()
+        self.GUI_Manager = GUI_Manager2.GUI_Manager2(self.tk)
+        self.gameInitialize()
+        #self.GUI_Manager.startMenu()
+        self.tk.mainloop()
+
+        ## Initialize the game
+    def gameInitialize(self):
+        ## Click to start game screen, unbind left click
+        def leftClick_Handler(event):
+            #self.tk.unbind("<Button-1>")
+            #self.execute()
+            print("LEFT")
+
+        ## Bind left click to call leftClick_Handler
+        self.tk.bind("<Button-1>", leftClick_Handler)
+
+        ## Place start message
+        message = Tkinter.Message(self.tk, text = "Click anywhere to start")
+        message.place(bordermode = Tkinter.OUTSIDE, height = 100, width = 250, relx = 0.30, rely = .45)
+
+    ## Execute command for State Machine
     def execute(self):
         self.StateMachine.execute()
 
-    def callGUI_Manager(self):
-        #do stuff
-        pass
-
     def Display_Start_Menu(self):
         #self.GUI_Manager.Display_Start_Menu()
+
         pass
 
     def callDataFile_Handler(self):
@@ -53,6 +70,9 @@ class GameState(Char):
         #print(type(self.Line))
         self.DataFile.updateLine()
         print (self.Line)
+
+    def DataFile_Empty_Handler(self):
+        self.DataFile.updateLine()
 
     def DataFile_DSC_Handler(self):
         self.DataFile.updateLine()
@@ -84,6 +104,7 @@ class GameState(Char):
     def DataFile_FIN_Handler():
         pass
 
+
     #def UserFile_FIN_Handler(self):  #player name, data file, likeability
     #    DataFile.endAct(self.line[1])
     #    act = DataFile.GetAct()
@@ -92,9 +113,9 @@ class GameState(Char):
 
 if __name__ == '__main__':
     game = GameState()
-    for i in range(0, 20):
-        startTime = clock()
-        timeInterval = 1
-        while(startTime + timeInterval > clock()):
-            pass
-        game.execute()
+    #for i in range(0, 20):
+    #    startTime = clock()
+    #    timeInterval = 0
+    #    while(startTime + timeInterval > clock()):
+    #        pass
+    #    game.execute()
