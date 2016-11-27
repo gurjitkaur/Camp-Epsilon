@@ -30,10 +30,10 @@ class StartState(State):
         super(StartState, self).__init__(StateMachine)
 
     def enter(self):
-        ##Call GameState.GUI_Manager to display the Start Menu
         pass
 
     def execute(self):
+        self.StateMachine.GameState.Display_Start_Menu()
         ##Wait until the user makes a playthrough choice
         ##On New Game, call GameState.UserFile_Manager to create a new save file, then set transition to TransitionState
         ##On Load Game, call GameState.UserFile_Manager to load existing save, then set transition to TransitionState

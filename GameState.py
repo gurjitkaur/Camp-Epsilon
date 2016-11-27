@@ -15,7 +15,7 @@ class GameState(Char):
         ## Initialize References
         self.StateMachine = StateMachine.StateMachine(self, self)
         self.DataFile = DataFile_Handler.DataFile_Handler("ACT1.txt")
-        self.Line = ""
+        self.line = ""
 
         ## Set States
         self.StateMachine.addState("StartState", StateMachine.StartState(self.StateMachine))
@@ -39,12 +39,17 @@ class GameState(Char):
         #self.GUI_Manager.startMenu()
         self.tk.mainloop()
 
+    ## Execute command for State Machine
+    def execute(self):
+        self.StateMachine.execute()
+
         ## Initialize the game
     def gameInitialize(self):
         ## Click to start game screen, unbind left click
         def leftClick_Handler(event):
-            #self.tk.unbind("<Button-1>")
-            #self.execute()
+            self.tk.unbind("<Button-1>")
+            message.destroy()
+            self.execute()
             print("LEFT")
 
         ## Bind left click to call leftClick_Handler
@@ -52,16 +57,10 @@ class GameState(Char):
 
         ## Place start message
         message = Tkinter.Message(self.tk, text = "Click anywhere to start")
-        message.place(bordermode = Tkinter.OUTSIDE, height = 100, width = 250, relx = 0.30, rely = .45)
-
-    ## Execute command for State Machine
-    def execute(self):
-        self.StateMachine.execute()
+        message.place(bordermode = Tkinter.OUTSIDE, height = self.GUI_Manager.mainFrameHeight, width = self.GUI_Manager.mainFrameWidth)
 
     def Display_Start_Menu(self):
-        #self.GUI_Manager.Display_Start_Menu()
-
-        pass
+        self.GUI_Manager.startMenu()
 
     def callDataFile_Handler(self):
         self.Line = self.DataFile.keyword_Handler()
@@ -69,7 +68,7 @@ class GameState(Char):
         #    self.Keyword = self.Line[0]
         #print(type(self.Line))
         self.DataFile.updateLine()
-        print (self.Line)
+        print (self.line)
 
     def DataFile_Empty_Handler(self):
         self.DataFile.updateLine()
