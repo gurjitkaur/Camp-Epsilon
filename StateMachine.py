@@ -1,6 +1,3 @@
-from time import clock
-from GameState import *
-
 ##===================================================================
 ## Transitions
 
@@ -28,25 +25,6 @@ class State(object):
     def exit(self):
         pass
 
-class StartState(State):
-    def __init__(self, StateMachine):
-        super(StartState, self).__init__(StateMachine)
-
-    def enter(self):
-        ##Call GameState.GUI_Manager to display the Start Menu
-        pass
-
-    def execute(self):
-        ##Wait until the user makes a playthrough choice
-        ##On New Game, call GameState.UserFile_Manager to create a new save file, then set transition to TransitionState
-        ##On Load Game, call GameState.UserFile_Manager to load existing save, then set transition to TransitionState
-        self.StateMachine.toTransition("toTransitionState")
-        pass
-        
-    def exit(self):
-        ##Call GameState.GUI_Manager to close the start menu, open the game menu
-        pass
-
 class TransitionState(State):
     def __init__(self, StateMachine):
         super(TransitionState, self).__init__(StateMachine)
@@ -67,7 +45,6 @@ class ReadState(State):
         super(ReadState, self).__init__(StateMachine)
 
     def enter(self):
-
         pass
 
     def execute(self):
@@ -88,6 +65,7 @@ class WaitState(State):
         super(WaitState, self).__init__(StateMachine)
 
     def enter(self):
+        print("Wait State")
         pass
 
     def execute(self):
@@ -115,6 +93,16 @@ class StateMachine(object):
 
         ##Initialize Reference to Game State
         self.GameState = GameState
+
+        ## Set States
+        self.addState("TransitionState", TransitionState(self))
+        self.addState("ReadState", ReadState(self))
+        self.addState("WaitState", WaitState(self))
+
+        ## Set Transitions
+        self.addTransition("toTransitionState", StateTransition("TransitionState"))
+        self.addTransition("toReadState", StateTransition("ReadState"))
+        self.addTransition("toWaitState", StateTransition("WaitState"))
 
     def addTransition(self, transName, transition):
         self.transitions[transName] = transition
