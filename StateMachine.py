@@ -48,14 +48,18 @@ class ReadState(State):
         pass
 
     def execute(self):
-        ##Call GameState.DataFile_Handler to parse keyword
+        ## Call GameState to parse and execute keyword
+        keyword = self.StateMachine.GameState.callDataFile_Handler()
         ##Depending on the returned value, set transition to:
             ##On ENC, WaitState
             ##On FIN, TransitionState
             ##On Anything else, ReadState
-        self.StateMachine.GameState.callDataFile_Handler()
-        self.StateMachine.toTransition("toReadState")
-        pass
+        if(keyword == "ENC"):
+            self.StateMachine.toTransition("toWaitState")
+        elif (keyword == "FIN"):
+            self.StateMachine.toTransition("toTransitionState")
+        else:
+            self.StateMachine.toTransition("toReadState")
         
     def exit(self):
         pass

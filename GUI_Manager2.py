@@ -23,6 +23,10 @@ class GUI_Manager2:
         self.dialog_frame = ttk.Frame(self.main_frame)          #Set dialog-frame for gameplay
         self.dialog_text = Text(self.dialog_frame)
         self.dialog_scroll = Scrollbar(self.dialog_frame)
+        self.dialog_yview = 1
+
+        ## Dialogue frame config
+        self.dialog_text.config(wrap = WORD)        
         
         ## User Frame
         self.user_frame = ttk.Frame(self.main_frame)                                                    #Set-user frame for gameplay, user's choices and options will go into this frame
@@ -102,33 +106,15 @@ class GUI_Manager2:
         buttonReturn.config(text = "Return to Menu", font  = buttonFont)    #create button for returning to start screen
         buttonReturn.place(x = 90, y = 185)                                 #place button to popup window
 
-        ## Gamescreen?
-        #self.gameScreen = Frame(self.root,bg = "black")                 #Create a frame to hold textbox, choice buttons?, and background?
-        #self.gameScreen.pack(fill = BOTH,expand = True)                 #Pack frame to window
-        #self.textbox = Frame(self.gameScreen)                           #Create frame that will hold text in the game
-        #self.textbox.config(height = 500, width = 500)                  #Set dimensions for frame
-        #self.textbox.pack()                                             #pack frame into gameScreen
-        #self.scroll = Scrollbar(self.textbox)                           #create scrollbar 
-        #self.scroll.pack(side = RIGHT, fill = Y)                        #pack scrollbar into window
-        #self.canvas = Canvas(self.textbox, scrollregion = (0,0,0,1000),height = 400, width = 400, bg = "white",yscrollcommand = self.scroll.set )#create canvas that will hold text. set scrollbar to scroll canvas vertically
-        #self.canvas.pack(side = LEFT)                                   #pack canvas left side of frame
-        #self.scroll.config( command = self.canvas.yview)                #set the scrollbar change the canvas
-        #logo = PhotoImage(file = 'python_logo.gif')
-        #option = Button(self.gameScreen, text = "Options", command = (lambda:self.optionMenu()), font  = buttonFont,width = 10, height = 5) #create button for options
-        #option.config(image = logo, compound = LEFT)
-        #option.pack()                                                   #pack button into frame
-        #self.GUI_HandlerBKG("")                                         #Used to 
-        #a = "I'll come running like Indiana Jones to rescue you!"#Test stuff will delete
-        #b ="You'll have to find a way to get out of there "#Test stuff will delete
-        #self.GUI_HandlerCHC(0,a,0,b)#Test stuff will delete
-
     def print_dialogue(self, message):
         ## Set Font
         DSCfont = tkFont.Font(size = 15)
 
-        ## Print to dialogue frame by temporarily enabling then disabling text
+        ## Print to dialogue frame by temporarily enabling then disabling text, update yview
         self.dialog_text.config(state = NORMAL)
-        self.dialog_text.insert(INSERT, message)
+        self.dialog_text.insert(END, message)
+        self.dialog_yview += 2
+        self.dialog_text.yview(self.dialog_yview)
         self.dialog_text.config(state = DISABLED)
         self.dialog_text.pack()
 

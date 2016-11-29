@@ -3,6 +3,7 @@ import DataFile_Handler
 import UserFile_Handler
 import Tkinter
 import GUI_Manager2
+import soundHandler
 
 from time import clock
 
@@ -18,7 +19,6 @@ class GameState(Char):
         self.DataFile = DataFile_Handler.DataFile_Handler("ACT1.txt")
 
         ## Game Data
-        self.line = ""                  # Line from data file
         self.choices = []               # List of choices
 
         ## Set first state to Transition State
@@ -151,6 +151,8 @@ class GameState(Char):
         
         options[line[0]]()
 
+        return line[0]
+
     ## DSC Keyword Handler: Call GUI_Manager to print text
     def Keyword_DSC_Handler(self, text):
         print("DSC")
@@ -210,34 +212,41 @@ class GameState(Char):
 
     ## SFX Keyword Handler: Call Sound_Manager to play sound effect
     def Keyword_SFX_Handler(self, text):
+        print("SFX")
         pass
 
     ## MUS Keyword Handler: Call Sound_Manager to loop music
     def Keyword_MUS_Handler(self, text):
+        print("MUS")
         pass
 
     ## BKG Keyword Handler: Call GUI_Manager to display background
     def Keyword_BKG_Handler(self, text):
+        print("BKG")
         pass
 
     ## LIK Keyword Handler: Call UserFile_Handler to update Likeability
     def Keyword_LIK_Handler(self, text):
+        print("LIK")
         pass
     
     ## JMP Keyword Handler: Call DataFile_Handler to jump to specific line in file
     def Keyword_JMP_Handler(self):
+        print("JMP")
         #self.DataFile.jumpToLine(self.Line[1])
         pass
 
     ## FIN Keyword Handler: Call UserFile_Handler to save
     ##                      Call DataFile_Handler to open new act
     def Keyword_FIN_Handler(self):
+        print("FIN")
         pass
 
     ## BRN Keyword Handler: Call DataFile_Handler to update branch variable
     #                       0 = decrement
     #                       1 = increment
     def Keyword_BRN_Handler(self):
+        print("BRN")
         pass
 
 
