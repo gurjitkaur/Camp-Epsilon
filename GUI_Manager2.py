@@ -20,8 +20,9 @@ class GUI_Manager2:
         self.bkg_frame = ttk.Frame(self.main_frame)
 
         ## Dialogue frame
-        self.dialog_frame = ttk.Frame(self.main_frame)
-        self.dialog_text = Text(self.dialog_frame)                                                  #Set dialog-frame for gameplay
+        self.dialog_frame = ttk.Frame(self.main_frame)          #Set dialog-frame for gameplay
+        self.dialog_text = Text(self.dialog_frame)
+        self.dialog_scroll = Scrollbar(self.dialog_frame)
         
         ## User Frame
         self.user_frame = ttk.Frame(self.main_frame)                                                    #Set-user frame for gameplay, user's choices and options will go into this frame
@@ -133,6 +134,19 @@ class GUI_Manager2:
 
     def print_background(self):
         pass
-    def print_choice(self):
-        pass
+        
+    def display_choice(self, button1, button2, choice1, choice2):
+        ## Font Setup
+        buttonFont = tkFont.Font(size = 15)
+
+        ## button1
+        button1.config(text = choice1, font = buttonFont)
+        button1.pack()
+
+        ## button2
+        button2.config(text = choice2, font = buttonFont)
+        button2.pack()
     
+    def hide_choice(self, button1, button2):
+        button1.destroy()
+        button2.destroy()

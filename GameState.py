@@ -16,7 +16,10 @@ class GameState(Char):
         ## Initialize References
         self.StateMachine = StateMachine.StateMachine(self, self)
         self.DataFile = DataFile_Handler.DataFile_Handler("ACT1.txt")
-        self.line = ""
+
+        ## Game Data
+        self.line = ""                  # Line from data file
+        self.choices = []               # List of choices
 
         ## Set first state to Transition State
         self.StateMachine.setState("TransitionState")
@@ -33,7 +36,7 @@ class GameState(Char):
 
     ## Initialize the game
     def gameInitialize(self):
-        ## Click to start game screen, unbind left click
+        ## Click to start game
         def leftClick_Handler(event):
             ##Unbind the button, clear the message
             self.tk.unbind("<Button-1>")
@@ -53,13 +56,11 @@ class GameState(Char):
         print("TEST")
 
     def click_Handler(self, event):
-        print("EXECUTE")
         self.execute()
 
     ## Display State Menu
     def display_StartMenu(self):
         print("Start Menu")
-
         ## Initialize start menu frame
         self.startMenuFrame = Tkinter.Frame(self.GUI_Manager.main_frame)
 
@@ -76,9 +77,11 @@ class GameState(Char):
         ## Call GUI_Manager to display buttons
         self.GUI_Manager.startMenu(title, buttonNewGame, buttonContinue, buttonExit)
 
+    ## Hide Start Menu
     def hide_StartMenu(self):
         self.startMenuFrame.place_forget()
     
+    ## Display the new game menu
     def display_NewGame_Menu(self):
         print("New Game")
         ## Create Toplevel entry
@@ -97,6 +100,7 @@ class GameState(Char):
         ## Call GUI_Manager to display NewGame Menu
         self.GUI_Manager.newGame(entry, instruction, entryBox, buttonConfirm, buttonReturn)
 
+    ## Create a new game when new game option is chosen from start menu
     def createNewGame(self, entry, entryBox):
         ## Get name from entry
         name = entryBox.get()
@@ -117,68 +121,126 @@ class GameState(Char):
         ## Execute State Machine
         self.execute()
 
+    ## Display the gamescreen.
     def display_GameScreen(self):
         print("Game Screen")
+        ## Call GUI_Manager to display screen
         self.GUI_Manager.gameScreen()
+
+        ## TESTER: Click to progress game
         self.tk.bind("<Button-1>", self.click_Handler)
 
+    ## DataFile_Handler call
     def callDataFile_Handler(self):
         line = self.DataFile.keyword_Handler()
         self.DataFile.updateLine()
         options = {
             ''      : lambda: None,
-            "DSC"   : lambda: self.DataFile_DSC_Handler(line[1]),
-            "NPC"   : lambda: self.DataFile_NPC_Handler(line[1]),
-            "CHC"   : lambda: self.DataFile_CHC_Handler(line[1]),
-            "SFX"   : lambda: self.DataFile_SFX_Handler(line[1]),
-            "MUS"   : lambda: self.DataFile_MUS_Handler(line[1]),
-            "BKG"   : lambda: self.DataFile_BKG_Handler(line[1]),
-            "LIK"   : lambda: self.DataFile_LIK_Handler(),
-            "JMP"   : lambda: self.DataFile_JMP_Handler(),
-            "FIN"   : lambda: self.DataFile_FIN_Handler(),
-            "BRN"   : lambda: self.DataFile_BRN_Handler(),
-            "ENC"   : lambda: self.DataFile_ENC_Handler()
+            "DSC"   : lambda: self.Keyword_DSC_Handler(line[1]),
+            "NPC"   : lambda: self.Keyword_NPC_Handler(line[1]),
+            "CHC"   : lambda: self.Keyword_CHC_Handler(self.choices, line[1], line[2]),
+            "SFX"   : lambda: self.Keyword_SFX_Handler(line[1]),
+            "MUS"   : lambda: self.Keyword_MUS_Handler(line[1]),
+            "BKG"   : lambda: self.Keyword_BKG_Handler(line[1]),
+            "LIK"   : lambda: self.Keyword_LIK_Handler(),
+            "JMP"   : lambda: self.Keyword_JMP_Handler(),
+            "FIN"   : lambda: self.Keyword_FIN_Handler(),
+            "BRN"   : lambda: self.Keyword_BRN_Handler(),
+            "ENC"   : lambda: self.Keyword_ENC_Handler(self.choices)
         }
         
         options[line[0]]()
 
-    def DataFile_DSC_Handler(self, text):
+    ## DSC Keyword Handler: Call GUI_Manager to print text
+    def Keyword_DSC_Handler(self, text):
         print("DSC")
-        self.GUI_Manager.print_dialogue(text)
+        self.GUI_Manager.print_dialogue(text + '\n')
 
-    def DataFile_NPC_Handler(self, text):
+    ## NPC Keyword Handler: Call GUI_Manager to print text
+    def Keyword_NPC_Handler(self, text):
         print("NPC")
-        self.GUI_Manager.print_dialogue(text)
-        #self.GUI_Manager.printNPC(self.Line[1])
+        self.GUI_Manager.print_dialogue(text + '\n')
 
-    def DataFile_CHC_Handler(self, text):
-        #self.GUI_Manager.addChoices(self.Line[1], self.Line[2], self.Line[4], self.Line[5])
-        pass
+    ## CHC Keyword Handler: Store choice line number and string
+    def Keyword_CHC_Handler(self, choices, line, text):
+        print("CHC")
+        choices.append(line)
+        choices.append(text)
 
-    def DataFile_SFX_Handler(self, text):
-        pass
+    ## ENC Keyword Handler: Call GUI_Manager to configure buttons.
+    #                       Wait for user input
+    #                       Set transition to wait state
+    def Keyword_ENC_Handler(self, choices):
+        print("ENC")
+        ## Create Choice Buttons
+        self.button1 = Tkinter.Button(self.GUI_Manager.user_frame, command = lambda: self.Choice1_Handler(choices[1]))
+        self.button2 = Tkinter.Button(self.GUI_Manager.user_frame, command = lambda: self.Choice2_Handler(choices[3]))
 
-    def DataFile_MUS_Handler(self, text):
-        pass
+        ## Call GUI_Manager to print choices onto buttons
+        self.GUI_Manager.display_choice(self.button1, self.button2, choices[1], choices[3])
 
-    def DataFile_BKG_Handler(self, text):
-        pass
+        ## TESTER: Unbind Left Click Story Progress
+        self.tk.unbind("<Button-1>")
 
-    def DataFile_LIK_Handler(self, text):
-        pass
+    ## Helper to CHC_Handler: Called when button1 is pressed
+    #                         Call GUI_Manager to print choices
+    #                         Call DataFile_Handler to jump to specific line
+    #                         Call Choice clear
+    def Choice1_Handler(self, choice):
+        self.GUI_Manager.print_dialogue(choice + '\n')
+        self.DataFile.setLineNumber(int(self.choices[0]))
+        self.Choice_Clear()
+
+    ## Helper to CHC_Handler: Called when button2 is pressed
+    def Choice2_Handler(self, choice):
+        self.GUI_Manager.print_dialogue(choice + '\n')
+        self.DataFile.setLineNumber(int(self.choices[2]))
+        self.Choice_Clear()
         
-    def DataFile_JMP_Handler(self):
+    ## Helper to ENC_Handler: Clear choices, clear buttons
+    def Choice_Clear(self):
+        ## Clear choices
+        self.choices[:] = []
+
+        ## Call GUI_Handler to hide buttons
+        self.GUI_Manager.hide_choice(self.button1, self.button2)
+
+        ## TESTER: Rebind left click
+        self.tk.bind("<Button-1>", self.click_Handler)
+
+    ## SFX Keyword Handler: Call Sound_Manager to play sound effect
+    def Keyword_SFX_Handler(self, text):
+        pass
+
+    ## MUS Keyword Handler: Call Sound_Manager to loop music
+    def Keyword_MUS_Handler(self, text):
+        pass
+
+    ## BKG Keyword Handler: Call GUI_Manager to display background
+    def Keyword_BKG_Handler(self, text):
+        pass
+
+    ## LIK Keyword Handler: Call UserFile_Handler to update Likeability
+    def Keyword_LIK_Handler(self, text):
+        pass
+    
+    ## JMP Keyword Handler: Call DataFile_Handler to jump to specific line in file
+    def Keyword_JMP_Handler(self):
         #self.DataFile.jumpToLine(self.Line[1])
         pass
 
-    def DataFile_FIN_Handler(self):
+    ## FIN Keyword Handler: Call UserFile_Handler to save
+    ##                      Call DataFile_Handler to open new act
+    def Keyword_FIN_Handler(self):
         pass
 
-    def DataFile_BRN_Handler(self):
+    ## BRN Keyword Handler: Call DataFile_Handler to update branch variable
+    #                       0 = decrement
+    #                       1 = increment
+    def Keyword_BRN_Handler(self):
         pass
 
-    def DataFile_ENC_Handler(self):
-        pass
+
 
 
     #def UserFile_FIN_Handler(self):  #player name, data file, likeability

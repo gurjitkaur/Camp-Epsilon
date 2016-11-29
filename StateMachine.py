@@ -30,7 +30,6 @@ class TransitionState(State):
         super(TransitionState, self).__init__(StateMachine)
 
     def enter(self):
-        print("Transition State")
         pass
 
     def execute(self):
@@ -46,7 +45,6 @@ class ReadState(State):
         super(ReadState, self).__init__(StateMachine)
 
     def enter(self):
-        print("Read State")
         pass
 
     def execute(self):
