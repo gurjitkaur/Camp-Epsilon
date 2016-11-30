@@ -1,12 +1,12 @@
 MUS_ **Backgrond music filepath**
 DSC_ ACT 1
-BKG_ **Background image filepath**
+BKG_ cabin1.gif
 SFX_ **Static soundbyte filepath**
 NPC_ Hello, can anyone--
 SFX_ **Static soundbyte filepath**
 NPC_ Anyone? Please, respond if you can here me...
-CHC_11_Who's this?
-CHC_11_Calm down, I'm here.
+CHC_11_ Who's this?
+CHC_11_ Calm down, I'm here.
 ENC_
 NPC_ Sorry. Right...
 DSC_ After a brief pause you hear the sound of a deep, calming breath.
@@ -98,7 +98,7 @@ NPC_ I'm sorry... I...
 NPC_ I thought I saw... something.
 NPC_ Outside the window...
 NPC_ Something's out there...
-ENA_0
+FIN_0
 NPC_ Coordinator's cabin. Right.
 NPC_ What if I can't find anyone else?
 CHC_107_ I'll come running, Indiana Jones, style to rescue you!
@@ -117,4 +117,4 @@ CHC_118_ Some of my favorite movies involve being alone in the woods...
 ENC_
 NPC_ ...I...
 NPC_ ... I think I'm being followed.
-ENA_1
+FIN_1

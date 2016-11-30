@@ -10,26 +10,26 @@ class GUI_Manager2:
     y = 50  #y coordinate to place text on canvas
 
     def __init__(self, master = None):
-        ## References
+        ## Declarations
         self.main_frame = ttk.Frame(master)                 #Set main frame, the other three smaller frames will go inside the main frame
         self.root = master                                  #Save tk object to loal var 
-        self.mainFrameWidth = 1000
-        self.mainFrameHeight = 600
+        self.mainFrameWidth = 1000                          #Width of the main window
+        self.mainFrameHeight = 600                          #Height of the main window
+
+        ## Start Menu Frame
+        self.start_frame = Frame(self.main_frame)
 
         ## Background frame
         self.bkg_frame = ttk.Frame(self.main_frame)
 
         ## Dialogue frame
         self.dialog_frame = ttk.Frame(self.main_frame)          #Set dialog-frame for gameplay
-        self.dialog_text = Text(self.dialog_frame)
-        self.dialog_scroll = Scrollbar(self.dialog_frame)
-        self.dialog_yview = 1
-
-        ## Dialogue frame config
-        self.dialog_text.config(wrap = WORD)        
+        self.dialog_text = Text(self.dialog_frame)              #Text portion of dialog frame
+        self.dialog_scroll = Scrollbar(self.dialog_frame)       #Scrollbar of dialog frame
+        self.dialog_yview = 1                                   #yview of dialogue frame
         
         ## User Frame
-        self.user_frame = ttk.Frame(self.main_frame)                                                    #Set-user frame for gameplay, user's choices and options will go into this frame
+        self.user_frame = ttk.Frame(self.main_frame)            #Set-user frame for gameplay, user's choices and options will go into this frame
         
         ## Main frame
         master.resizable(width = False, height = False)     #Make window not resizable 
@@ -51,37 +51,40 @@ class GUI_Manager2:
 
         ## New Game Button
         buttonNewGame.config(text = "New Game", font = buttonFont)        #created button for start screen 
-        buttonNewGame.place(bordermode = OUTSIDE, height = 100, width = 250, relx = 0.40, rely = .20)                     #Set button in place, set dimensions
+        buttonNewGame.place(bordermode = OUTSIDE, height = 30, width = 250, relx = 0.40, rely = .20)                     #Set button in place, set dimensions
 
         ## Load Game Button
         buttonContinue.config(text = "Continue Game", font = buttonFont)     #create button for load screen
-        buttonContinue.place(bordermode = OUTSIDE, height = 100, width = 250, relx = 0.40, rely = .45)                      #set button in place, set dimensions
+        buttonContinue.place(bordermode = OUTSIDE, height = 30, width = 250, relx = 0.40, rely = .30)                      #set button in place, set dimensions
 
         ## Exit Game Button
         buttonExit.config(text = "Exit Game", font = buttonFont)                                          #create button for game exit
-        buttonExit.place(bordermode = OUTSIDE, height = 100, width = 250, relx = 0.40, rely = .70)                      #set button in place, set dimensions 
+        buttonExit.place(bordermode = OUTSIDE, height = 30, width = 250, relx = 0.40, rely = .40)                      #set button in place, set dimensions 
 
         #soundplayer.updateMusic(placeholder)               #play music on screen
     
     ## Display the game menu
     def gameScreen(self):
-        ## Display Background frame
+        ## Background Frame Configuration
         self.bkg_frame.grid(row = 0, column = 0, rowspan = 2, sticky = 'nsew', padx = 10, pady = 10)    #Position the frame and add padding         
         self.bkg_frame.config(width = 450)                                                              #Set the width of the frame
         self.bkg_frame.config(relief = RIDGE)                                                           #Style the border
 
-        ## Display Dialogue frame
+        ## Dialogue Frame Configuration
         self.dialog_frame.grid(row = 0, column = 1, sticky = 'nsew', padx = 10, pady = 10)              #Position the frame and add padding
         self.dialog_frame.config(height = 270, width = 450)                                             #Set height and width of the frame
         self.dialog_frame.config(relief = RIDGE)                                                        #Style the border
         self.dialog_text.config(state = DISABLED)
+        self.dialog_text.config(wrap = WORD) 
 
-        ## Display User frame
+        ## User Frame Configuration
         self.user_frame.grid(row = 1, column = 1, sticky = 'nsew', padx = 10, pady = 10)                #Position the frame and add padding
         self.user_frame.config(height = 270, width = 450)                                               #Set height and width of the frame
         self.user_frame.config(relief = RIDGE)                                                          #Style the border
 
         self.main_frame.pack()
+
+
 
     #Method that creates popup window for file name entry. Changes start screen to game screen
     def newGame(self, entry, instruction, entryBox, buttonConfirm, buttonReturn):
@@ -94,8 +97,6 @@ class GUI_Manager2:
         entry.resizable(height = False, width = False)             #Make window not resizable
 
         ## Player prompt and entry box
-        #instruction.config(text = "Enter name for save file.")              #Create text to instruct player to type name
-        #instruction.place(x = 0,y = 50)                                     #Place label
         entryBox.place(x = 0,y = 50)                                      #place entry in frame
 
         ## Confirm button
@@ -106,6 +107,25 @@ class GUI_Manager2:
         buttonReturn.config(text = "Return to Menu", font  = buttonFont)    #create button for returning to start screen
         buttonReturn.place(x = 90, y = 185)                                 #place button to popup window
 
+    def loadMenu(self, loadMenu_frame, namesList, loadButtonList, fileCount, backButton):
+        ##Overlay load frame
+        loadMenu_frame.config(height = self.mainFrameHeight, width = self.mainFrameWidth)
+        loadMenu_frame.pack_propagate(False)
+        loadMenu_frame.pack()
+
+        ## Font Setup
+        buttonFont = tkFont.Font(size = 15)
+
+        ## Display list of buttons
+        for i in range(0, fileCount):
+            loadButtonList[i].config(text = namesList[i], font = buttonFont)
+            loadButtonList[i].pack()
+
+        ## Display Back Button
+        backButton.config(text = "Back", font = buttonFont)
+        backButton.pack()
+
+    ## Print the dialogue
     def print_dialogue(self, message):
         ## Set Font
         DSCfont = tkFont.Font(size = 15)
@@ -118,9 +138,14 @@ class GUI_Manager2:
         self.dialog_text.config(state = DISABLED)
         self.dialog_text.pack()
 
-    def print_background(self):
-        pass
+    ## Print the background
+    def print_background(self, image):
+        bkg_photo = PhotoImage(file = image)
+        image_label = Label(self.bkg_frame, image = bkg_photo)
+        image_label.photo = bkg_photo
+        image_label.pack()
         
+    ## Display the player choices
     def display_choice(self, button1, button2, choice1, choice2):
         ## Font Setup
         buttonFont = tkFont.Font(size = 15)
@@ -133,6 +158,7 @@ class GUI_Manager2:
         button2.config(text = choice2, font = buttonFont)
         button2.pack()
     
+    ## Destroy the choice buttons
     def hide_choice(self, button1, button2):
         button1.destroy()
         button2.destroy()
