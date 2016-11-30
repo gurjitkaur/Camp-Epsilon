@@ -24,12 +24,12 @@ class GUI_Manager2:
 
         ## Dialogue frame
         self.dialog_frame = ttk.Frame(self.main_frame)          #Set dialog-frame for gameplay
-        self.dialog_text = Text(self.dialog_frame)
-        self.dialog_scroll = Scrollbar(self.dialog_frame)
-        self.dialog_yview = 1
+        self.dialog_text = Text(self.dialog_frame)              #Text portion of dialog frame
+        self.dialog_scroll = Scrollbar(self.dialog_frame)       #Scrollbar of dialog frame
+        self.dialog_yview = 1                                   #yview of dialogue frame
         
         ## User Frame
-        self.user_frame = ttk.Frame(self.main_frame)                                                    #Set-user frame for gameplay, user's choices and options will go into this frame
+        self.user_frame = ttk.Frame(self.main_frame)            #Set-user frame for gameplay, user's choices and options will go into this frame
         
         ## Main frame
         master.resizable(width = False, height = False)     #Make window not resizable 
@@ -97,8 +97,6 @@ class GUI_Manager2:
         entry.resizable(height = False, width = False)             #Make window not resizable
 
         ## Player prompt and entry box
-        #instruction.config(text = "Enter name for save file.")              #Create text to instruct player to type name
-        #instruction.place(x = 0,y = 50)                                     #Place label
         entryBox.place(x = 0,y = 50)                                      #place entry in frame
 
         ## Confirm button
@@ -108,6 +106,24 @@ class GUI_Manager2:
         ## Return button
         buttonReturn.config(text = "Return to Menu", font  = buttonFont)    #create button for returning to start screen
         buttonReturn.place(x = 90, y = 185)                                 #place button to popup window
+
+    def loadMenu(self, loadMenu_frame, namesList, loadButtonList, fileCount, backButton):
+        ##Overlay load frame
+        loadMenu_frame.config(height = self.mainFrameHeight, width = self.mainFrameWidth)
+        loadMenu_frame.pack_propagate(False)
+        loadMenu_frame.pack()
+
+        ## Font Setup
+        buttonFont = tkFont.Font(size = 15)
+
+        ## Display list of buttons
+        for i in range(0, fileCount):
+            loadButtonList[i].config(text = namesList[i], font = buttonFont)
+            loadButtonList[i].pack()
+
+        ## Display Back Button
+        backButton.config(text = "Back", font = buttonFont)
+        backButton.pack()
 
     ## Print the dialogue
     def print_dialogue(self, message):

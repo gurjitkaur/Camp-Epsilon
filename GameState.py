@@ -17,6 +17,7 @@ class GameState(Char):
         ## Initialize References
         self.StateMachine = StateMachine.StateMachine(self, self)
         self.DataFile = DataFile_Handler.DataFile_Handler("ACT1.txt")
+        self.UserFile = UserFile_Handler.UserFile_Handler()
 
         ## Game Data
         self.choices = []               # List of choices
@@ -68,7 +69,7 @@ class GameState(Char):
 
         ## Create Buttons
         buttonNewGame = Tkinter.Button(self.GUI_Manager.start_frame, command = lambda: self.display_NewGame_Menu())
-        buttonContinue = Tkinter.Button(self.GUI_Manager.start_frame, command = lambda: self.tester_prompt())
+        buttonContinue = Tkinter.Button(self.GUI_Manager.start_frame, command = lambda: self.display_LoadMenu())
         buttonExit = Tkinter.Button(self.GUI_Manager.start_frame, command = lambda: self.tk.quit())
 
         self.GUI_Manager.start_frame.place(bordermode = Tkinter.OUTSIDE, height = self.GUI_Manager.mainFrameHeight, width = self.GUI_Manager.mainFrameWidth)
@@ -104,8 +105,8 @@ class GameState(Char):
         ## Get name from entry
         name = entryBox.get()
 
-        ## Call userfile handler to get name
-        self.UserFile = UserFile_Handler.UserFile_Handler(name)
+        ## Call userfile handler to set name
+        self.UserFile.setPlayerName(name)
 
         ## Save file
         self.UserFile.saveFile()
@@ -119,6 +120,36 @@ class GameState(Char):
 
         ## Execute State Machine
         self.execute()
+
+    ## Load Menu
+    def display_LoadMenu(self):
+        ##Create load menu frame
+        loadMenu_frame = Tkinter.Frame(self.GUI_Manager.main_frame)
+
+        ##Check SaveFile.txt, Get names, number of files
+        fileNames = self.UserFile.getFileNames()
+        fileCount = len(fileNames)
+
+        ##Create list of load buttons
+        loadList = []
+        for i in range(0, fileCount):
+            buttonConfirm = Tkinter.Button(loadMenu_frame, command = lambda x = fileNames[i], y = i: self.loadButton_Handler(x, y))
+            loadList.append(buttonConfirm)
+        
+        ##Create back button
+        backButton = Tkinter.Button(loadMenu_frame, command = lambda: loadMenu_frame.destroy())
+
+        ##Pass buttons to load screen
+        self.GUI_Manager.loadMenu(loadMenu_frame, fileNames, loadList, fileCount, backButton)
+
+    ## Handler to check load button press
+    def loadButton_Handler(self, name, line):
+        ##Call UserFile_Handler to load data from name
+        self.UserFile.loadFile(name)
+
+        ##Update Act
+        self.DataFile.newAct(self.UserFile.getDataFile())
+        ##Transition
 
     ## Display the gamescreen.
     def display_GameScreen(self):

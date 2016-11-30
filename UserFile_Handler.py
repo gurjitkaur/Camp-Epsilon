@@ -5,9 +5,9 @@ class UserFile_Handler():
 	PlayerName = ""
 	Likability = 0
 	
-	def __init__(self, name):
+	def __init__(self):
 		self.setDataFile("ACT1.txt")
-		self.setPlayerName(name)
+		self.setPlayerName("")
 		self.setLike(0)
 		
 	def updateUser(self, fileData):
