@@ -267,19 +267,10 @@ class GameState(Char):
         ## Save UserFile
         self.UserFile.saveFile()
 
-    ## BRN Keyword Handler: Call DataFile_Handler to update branch variable
-    #                       0 = decrement
-    #                       1 = increment
+    ## BRN Keyword Handler: Call DataFile_Handler to update branch variable: 0 = decrement, 1 = increment
     def Keyword_BRN_Handler(self, changeInValue):
         print("BRN")
         self.DataFile.updateNextAct(int(changeInValue))
-
-
-    #def UserFile_FIN_Handler(self):  #player name, data file, likeability
-    #    DataFile.endAct(self.line[1])
-    #    act = DataFile.GetAct()
-    #    UserFile.updateUser([UserFile.getName(), DataFile.getAct(), UserFile.getLikeabilty()])
-    #    UserFile.SaveFile()
 
 if __name__ == '__main__':
     game = GameState()

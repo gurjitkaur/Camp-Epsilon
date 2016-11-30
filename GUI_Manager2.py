@@ -10,11 +10,11 @@ class GUI_Manager2:
     y = 50  #y coordinate to place text on canvas
 
     def __init__(self, master = None):
-        ## References
+        ## Declarations
         self.main_frame = ttk.Frame(master)                 #Set main frame, the other three smaller frames will go inside the main frame
         self.root = master                                  #Save tk object to loal var 
-        self.mainFrameWidth = 1000
-        self.mainFrameHeight = 600
+        self.mainFrameWidth = 1000                          #Width of the main window
+        self.mainFrameHeight = 600                          #Height of the main window
 
         ## Start Menu Frame
         self.start_frame = Frame(self.main_frame)
@@ -27,9 +27,6 @@ class GUI_Manager2:
         self.dialog_text = Text(self.dialog_frame)
         self.dialog_scroll = Scrollbar(self.dialog_frame)
         self.dialog_yview = 1
-
-        ## Dialogue frame config
-        self.dialog_text.config(wrap = WORD)        
         
         ## User Frame
         self.user_frame = ttk.Frame(self.main_frame)                                                    #Set-user frame for gameplay, user's choices and options will go into this frame
@@ -78,6 +75,7 @@ class GUI_Manager2:
         self.dialog_frame.config(height = 270, width = 450)                                             #Set height and width of the frame
         self.dialog_frame.config(relief = RIDGE)                                                        #Style the border
         self.dialog_text.config(state = DISABLED)
+        self.dialog_text.config(wrap = WORD) 
 
         ## User Frame Configuration
         self.user_frame.grid(row = 1, column = 1, sticky = 'nsew', padx = 10, pady = 10)                #Position the frame and add padding
