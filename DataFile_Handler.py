@@ -82,10 +82,10 @@ class DataFile_Handler():
 			self.NextAct = self.NextAct - 1
 		else:
 			self.NextAct = self.NextAct + 1
-		self.updateLine()
+		#self.updateLine()
 	
 	def endAct(self, version):
-		if(CurrentDataFile == "ACT1.txt"):
+		if(self.CurrentDataFile == "ACT1.txt"):
 			if(self.NextAct >= 0):
 				if(version == 0):
 					self.newAct("ACT2H1.txt")
@@ -97,22 +97,22 @@ class DataFile_Handler():
 				else:
 					self.newAct("ACT2S2.txt")
 					
-		elif(CurrentDataFile == "ACT2S1.txt"):
+		elif(self.CurrentDataFile == "ACT2S1.txt"):
 			if(self.NextAct >= 0):
 				self.newAct("ACT3S2.txt")
 			else:
 				self.newAct("ACT3S3.txt")
-		elif(CurrentDataFile == "ACT2S2.txt"):
+		elif(self.CurrentDataFile == "ACT2S2.txt"):
 			if(self.NextAct >= 0):
 				self.newAct("ACT3S1.txt")
 			else:
 				self.newAct("ACT3S3.txt")
-		elif(CurrentDataFile == "ACT2H1.txt"):
+		elif(self.CurrentDataFile == "ACT2H1.txt"):
 			if(self.NextAct >= 0):
 				self.newAct("ACT3H2.txt")
 			else:
 				self.newAct("ACT3H3.txt")
-		elif(CurrentDataFile == "ACT2H2.txt"):
+		elif(self.CurrentDataFile == "ACT2H2.txt"):
 			if(self.NextAct >= 0):
 				self.newAct("ACT3H1.txt")
 			else:

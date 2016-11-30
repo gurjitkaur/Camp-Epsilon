@@ -63,25 +63,22 @@ class GameState(Char):
     ## Display State Menu
     def display_StartMenu(self):
         print("Start Menu")
-        ## Initialize start menu frame
-        self.startMenuFrame = Tkinter.Frame(self.GUI_Manager.main_frame)
-
         ## Setup Title
-        title = Tkinter.Label(self.startMenuFrame)
+        title = Tkinter.Label(self.GUI_Manager.start_frame)
 
         ## Create Buttons
-        buttonNewGame = Tkinter.Button(self.startMenuFrame, command = lambda: self.display_NewGame_Menu())
-        buttonContinue = Tkinter.Button(self.startMenuFrame, command = lambda: self.tester_prompt())
-        buttonExit = Tkinter.Button(self.startMenuFrame, command = lambda: self.tk.quit())
+        buttonNewGame = Tkinter.Button(self.GUI_Manager.start_frame, command = lambda: self.display_NewGame_Menu())
+        buttonContinue = Tkinter.Button(self.GUI_Manager.start_frame, command = lambda: self.tester_prompt())
+        buttonExit = Tkinter.Button(self.GUI_Manager.start_frame, command = lambda: self.tk.quit())
 
-        self.startMenuFrame.place(bordermode = Tkinter.OUTSIDE, height = self.GUI_Manager.mainFrameHeight, width = self.GUI_Manager.mainFrameWidth)
+        self.GUI_Manager.start_frame.place(bordermode = Tkinter.OUTSIDE, height = self.GUI_Manager.mainFrameHeight, width = self.GUI_Manager.mainFrameWidth)
         
         ## Call GUI_Manager to display buttons
         self.GUI_Manager.startMenu(title, buttonNewGame, buttonContinue, buttonExit)
 
     ## Hide Start Menu
     def hide_StartMenu(self):
-        self.startMenuFrame.place_forget()
+        self.GUI_Manager.start_frame.place_forget()
     
     ## Display the new game menu
     def display_NewGame_Menu(self):
@@ -114,7 +111,7 @@ class GameState(Char):
         self.UserFile.saveFile()
 
         ## Clear the screen
-        self.startMenuFrame.place_forget()
+        self.GUI_Manager.start_frame.place_forget()
         entry.destroy()
 
         ## Display the gamescreen
@@ -144,10 +141,10 @@ class GameState(Char):
             "SFX"   : lambda: self.Keyword_SFX_Handler(line[1]),
             "MUS"   : lambda: self.Keyword_MUS_Handler(line[1]),
             "BKG"   : lambda: self.Keyword_BKG_Handler(line[1]),
-            "LIK"   : lambda: self.Keyword_LIK_Handler(),
-            "JMP"   : lambda: self.Keyword_JMP_Handler(),
-            "FIN"   : lambda: self.Keyword_FIN_Handler(),
-            "BRN"   : lambda: self.Keyword_BRN_Handler(),
+            "LIK"   : lambda: self.Keyword_LIK_Handler(line[1]),
+            "JMP"   : lambda: self.Keyword_JMP_Handler(line[1]),
+            "FIN"   : lambda: self.Keyword_FIN_Handler(line[1]),
+            "BRN"   : lambda: self.Keyword_BRN_Handler(line[1]),
             "ENC"   : lambda: self.Keyword_ENC_Handler(self.choices)
         }
         
@@ -200,7 +197,7 @@ class GameState(Char):
         self.GUI_Manager.print_dialogue(choice + '\n')
         self.DataFile.setLineNumber(int(self.choices[2]))
         self.Choice_Clear()
-        
+
     ## Helper to ENC_Handler: Clear choices, clear buttons
     def Choice_Clear(self):
         ## Clear choices
@@ -235,30 +232,48 @@ class GameState(Char):
         self.GUI_Manager.print_background(text)
 
     ## LIK Keyword Handler: Call UserFile_Handler to update Likeability
-    def Keyword_LIK_Handler(self, text):
+    def Keyword_LIK_Handler(self, likeability):
         print("LIK")
+        ## Get current likeability
+        currentLike = self.UserFile.getLike()
 
-        pass
+        ## Update likeability 1 = increment, 0 = decrement
+        if (int(likeability) == 1):
+            currentLike += 1
+        elif(int(likeability == 0)):
+            currentLike -= 1
+
+        ## Update likeability in UserFile
+        self.UserFile.setLike(currentLike)
     
     ## JMP Keyword Handler: Call DataFile_Handler to jump to specific line in file
     def Keyword_JMP_Handler(self, line):
         print("JMP")
-        self.DataFile.setLineNumber()
-        #self.DataFile.jumpToLine(self.Line[1])
-        pass
+        self.DataFile.setLineNumber(int(line))
 
     ## FIN Keyword Handler: Call UserFile_Handler to save
     ##                      Call DataFile_Handler to open new act
-    def Keyword_FIN_Handler(self):
+    def Keyword_FIN_Handler(self, version):
         print("FIN")
-        pass
+        ## Call DataFile_Handler to get the next act based on parameters nextAct
+        self.DataFile.endAct(int(version))
+
+        ## Get Current act
+        currentAct = self.DataFile.getCurrentAct()
+
+        ## Update UserFile
+        self.UserFile.setDataFile(currentAct)
+
+        ## Save UserFile
+        self.UserFile.saveFile()
 
     ## BRN Keyword Handler: Call DataFile_Handler to update branch variable
     #                       0 = decrement
     #                       1 = increment
-    def Keyword_BRN_Handler(self):
+    def Keyword_BRN_Handler(self, changeInValue):
         print("BRN")
-        pass
+        self.DataFile.updateNextAct(int(changeInValue))
+
 
     #def UserFile_FIN_Handler(self):  #player name, data file, likeability
     #    DataFile.endAct(self.line[1])

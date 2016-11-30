@@ -16,6 +16,9 @@ class GUI_Manager2:
         self.mainFrameWidth = 1000
         self.mainFrameHeight = 600
 
+        ## Start Menu Frame
+        self.start_frame = Frame(self.main_frame)
+
         ## Background frame
         self.bkg_frame = ttk.Frame(self.main_frame)
 
@@ -51,32 +54,32 @@ class GUI_Manager2:
 
         ## New Game Button
         buttonNewGame.config(text = "New Game", font = buttonFont)        #created button for start screen 
-        buttonNewGame.place(bordermode = OUTSIDE, height = 100, width = 250, relx = 0.40, rely = .20)                     #Set button in place, set dimensions
+        buttonNewGame.place(bordermode = OUTSIDE, height = 30, width = 250, relx = 0.40, rely = .20)                     #Set button in place, set dimensions
 
         ## Load Game Button
         buttonContinue.config(text = "Continue Game", font = buttonFont)     #create button for load screen
-        buttonContinue.place(bordermode = OUTSIDE, height = 100, width = 250, relx = 0.40, rely = .45)                      #set button in place, set dimensions
+        buttonContinue.place(bordermode = OUTSIDE, height = 30, width = 250, relx = 0.40, rely = .30)                      #set button in place, set dimensions
 
         ## Exit Game Button
         buttonExit.config(text = "Exit Game", font = buttonFont)                                          #create button for game exit
-        buttonExit.place(bordermode = OUTSIDE, height = 100, width = 250, relx = 0.40, rely = .70)                      #set button in place, set dimensions 
+        buttonExit.place(bordermode = OUTSIDE, height = 30, width = 250, relx = 0.40, rely = .40)                      #set button in place, set dimensions 
 
         #soundplayer.updateMusic(placeholder)               #play music on screen
     
     ## Display the game menu
     def gameScreen(self):
-        ## Display Background frame
+        ## Background Frame Configuration
         self.bkg_frame.grid(row = 0, column = 0, rowspan = 2, sticky = 'nsew', padx = 10, pady = 10)    #Position the frame and add padding         
         self.bkg_frame.config(width = 450)                                                              #Set the width of the frame
         self.bkg_frame.config(relief = RIDGE)                                                           #Style the border
 
-        ## Display Dialogue frame
+        ## Dialogue Frame Configuration
         self.dialog_frame.grid(row = 0, column = 1, sticky = 'nsew', padx = 10, pady = 10)              #Position the frame and add padding
         self.dialog_frame.config(height = 270, width = 450)                                             #Set height and width of the frame
         self.dialog_frame.config(relief = RIDGE)                                                        #Style the border
         self.dialog_text.config(state = DISABLED)
 
-        ## Display User frame
+        ## User Frame Configuration
         self.user_frame.grid(row = 1, column = 1, sticky = 'nsew', padx = 10, pady = 10)                #Position the frame and add padding
         self.user_frame.config(height = 270, width = 450)                                               #Set height and width of the frame
         self.user_frame.config(relief = RIDGE)                                                          #Style the border
@@ -108,6 +111,7 @@ class GUI_Manager2:
         buttonReturn.config(text = "Return to Menu", font  = buttonFont)    #create button for returning to start screen
         buttonReturn.place(x = 90, y = 185)                                 #place button to popup window
 
+    ## Print the dialogue
     def print_dialogue(self, message):
         ## Set Font
         DSCfont = tkFont.Font(size = 15)
@@ -120,12 +124,14 @@ class GUI_Manager2:
         self.dialog_text.config(state = DISABLED)
         self.dialog_text.pack()
 
+    ## Print the background
     def print_background(self, image):
         bkg_photo = PhotoImage(file = image)
         image_label = Label(self.bkg_frame, image = bkg_photo)
         image_label.photo = bkg_photo
         image_label.pack()
         
+    ## Display the player choices
     def display_choice(self, button1, button2, choice1, choice2):
         ## Font Setup
         buttonFont = tkFont.Font(size = 15)
@@ -138,6 +144,7 @@ class GUI_Manager2:
         button2.config(text = choice2, font = buttonFont)
         button2.pack()
     
+    ## Destroy the choice buttons
     def hide_choice(self, button1, button2):
         button1.destroy()
         button2.destroy()
