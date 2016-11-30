@@ -83,6 +83,8 @@ class GUI_Manager2:
 
         self.main_frame.pack()
 
+
+
     #Method that creates popup window for file name entry. Changes start screen to game screen
     def newGame(self, entry, instruction, entryBox, buttonConfirm, buttonReturn):
         ## Set Font
@@ -118,8 +120,11 @@ class GUI_Manager2:
         self.dialog_text.config(state = DISABLED)
         self.dialog_text.pack()
 
-    def print_background(self):
-        pass
+    def print_background(self, image):
+        bkg_photo = PhotoImage(file = image)
+        image_label = Label(self.bkg_frame, image = bkg_photo)
+        image_label.photo = bkg_photo
+        image_label.pack()
         
     def display_choice(self, button1, button2, choice1, choice2):
         ## Font Setup

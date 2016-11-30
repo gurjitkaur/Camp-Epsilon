@@ -3,7 +3,7 @@ import DataFile_Handler
 import UserFile_Handler
 import Tkinter
 import GUI_Manager2
-import soundHandler
+import pygame
 
 from time import clock
 
@@ -52,9 +52,11 @@ class GameState(Char):
         message = Tkinter.Message(self.tk, text = "Click anywhere to start")
         message.place(bordermode = Tkinter.OUTSIDE, height = self.GUI_Manager.mainFrameHeight, width = self.GUI_Manager.mainFrameWidth)
 
+    ## TESTER: Print test for pieces that are WIPs
     def tester_prompt(self):
         print("TEST")
 
+    ## TESTER: Execute state machine with each click
     def click_Handler(self, event):
         self.execute()
 
@@ -223,16 +225,25 @@ class GameState(Char):
     ## BKG Keyword Handler: Call GUI_Manager to display background
     def Keyword_BKG_Handler(self, text):
         print("BKG")
-        pass
+        ## Remove endline char
+        text = text[:-1]
+
+        ## Remove space
+        text = text[1:]
+
+        ## Call GUI_Manager to print the background (image must be specific size)
+        self.GUI_Manager.print_background(text)
 
     ## LIK Keyword Handler: Call UserFile_Handler to update Likeability
     def Keyword_LIK_Handler(self, text):
         print("LIK")
+
         pass
     
     ## JMP Keyword Handler: Call DataFile_Handler to jump to specific line in file
-    def Keyword_JMP_Handler(self):
+    def Keyword_JMP_Handler(self, line):
         print("JMP")
+        self.DataFile.setLineNumber()
         #self.DataFile.jumpToLine(self.Line[1])
         pass
 
@@ -248,9 +259,6 @@ class GameState(Char):
     def Keyword_BRN_Handler(self):
         print("BRN")
         pass
-
-
-
 
     #def UserFile_FIN_Handler(self):  #player name, data file, likeability
     #    DataFile.endAct(self.line[1])
