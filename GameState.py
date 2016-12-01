@@ -85,20 +85,20 @@ class GameState(Char):
     def display_NewGame_Menu(self):
         print("New Game")
         ## Create Toplevel entry
-        entry = Tkinter.Toplevel(self.GUI_Manager.main_frame)
+        entry_frame = Tkinter.Frame(self.GUI_Manager.main_frame)
 
         ## Create player prompt and entry box
-        instruction = Tkinter.Label(entry)
-        entryBox = Tkinter.Entry(entry)
+        instruction = Tkinter.Label(entry_frame)
+        entryBox = Tkinter.Entry(entry_frame)
 
         ## Confirm button
-        buttonConfirm = Tkinter.Button(entry, command = lambda: self.createNewGame(entry, entryBox))
+        buttonConfirm = Tkinter.Button(entry_frame, command = lambda: self.createNewGame(entry_frame, entryBox))
 
         ## Return button
-        buttonReturn = Tkinter.Button(entry, command = lambda: self.tester_prompt())
+        buttonReturn = Tkinter.Button(entry_frame, command = lambda: entry_frame.destroy())
 
         ## Call GUI_Manager to display NewGame Menu
-        self.GUI_Manager.newGame(entry, instruction, entryBox, buttonConfirm, buttonReturn)
+        self.GUI_Manager.newGame(entry_frame, instruction, entryBox, buttonConfirm, buttonReturn)
 
     ## Create a new game when new game option is chosen from start menu
     def createNewGame(self, entry, entryBox):
@@ -133,23 +133,48 @@ class GameState(Char):
         ##Create list of load buttons
         loadList = []
         for i in range(0, fileCount):
-            buttonConfirm = Tkinter.Button(loadMenu_frame, command = lambda x = fileNames[i], y = i: self.loadButton_Handler(x, y))
+            buttonConfirm = Tkinter.Button(loadMenu_frame, command = lambda x = fileNames[i]: self.loadButton_Handler(loadMenu_frame, x))
             loadList.append(buttonConfirm)
         
         ##Create back button
         backButton = Tkinter.Button(loadMenu_frame, command = lambda: loadMenu_frame.destroy())
 
-        ##Pass buttons to load screen
+        ##Pass buttons to GUI_Manager: load screen
         self.GUI_Manager.loadMenu(loadMenu_frame, fileNames, loadList, fileCount, backButton)
 
     ## Handler to check load button press
-    def loadButton_Handler(self, name, line):
+    def loadButton_Handler(self, loadMenu_frame, name):
+        ##Create topLevel
+        load_topLevel = Tkinter.Toplevel(loadMenu_frame)
+        ##Create label to display name
+        nameLabel = Tkinter.Label(load_topLevel, text = name)
+
+        ##Create Buttons: continue, delete, cancel
+        loadConfirm_Button = Tkinter.Button(load_topLevel, command = lambda: self.loadConfirm_Handler(loadMenu_frame, name))
+        loadDelete_Button = Tkinter.Button(load_topLevel, command = lambda: self.loadDelete_Handler(loadMenu_frame, name))
+        loadCancel_Button = Tkinter.Button(load_topLevel, command = lambda: load_topLevel.destroy())
+
+        ##Pass to GUI_Manager: loadChoice
+        self.GUI_Manager.loadChoice(load_topLevel, nameLabel, loadConfirm_Button, loadDelete_Button, loadCancel_Button)
+
+    def loadConfirm_Handler(self, loadMenu_frame, name):
+        print("CONFIRM: " + str(name))
         ##Call UserFile_Handler to load data from name
         self.UserFile.loadFile(name)
 
         ##Update Act
         self.DataFile.newAct(self.UserFile.getDataFile())
+
         ##Transition
+
+    def loadDelete_Handler(self, loadMenu_frame, name):
+        print("DELETE: " + str(name))
+        ##Call UserFile_Handler to delete file with specific name
+        self.UserFile.deleteFile(name)
+
+        ##Refresh Load Screen
+        loadMenu_frame.destroy()
+        self.display_LoadMenu()
 
     ## Display the gamescreen.
     def display_GameScreen(self):
@@ -302,6 +327,13 @@ class GameState(Char):
     def Keyword_BRN_Handler(self, changeInValue):
         print("BRN")
         self.DataFile.updateNextAct(int(changeInValue))
+
+    def StateMachine_Read_Handler(self):
+        pass
+    def StateMachine_Wait_Handler(self):
+        pass
+    def StateMachine_Transition_Handler(self):
+        pass
 
 if __name__ == '__main__':
     game = GameState()
