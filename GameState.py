@@ -165,7 +165,15 @@ class GameState(Char):
         ##Update Act
         self.DataFile.newAct(self.UserFile.getDataFile())
 
-        ##Transition
+        ## Clear the screen
+        self.GUI_Manager.start_frame.place_forget()
+        loadMenu_frame.destroy()
+
+        ## Display the gamescreen
+        self.display_GameScreen()
+
+        ## Execute State Machine
+        self.execute()
 
     def loadDelete_Handler(self, loadMenu_frame, name):
         print("DELETE: " + str(name))
@@ -262,7 +270,7 @@ class GameState(Char):
         ## Call GUI_Handler to hide buttons
         self.GUI_Manager.hide_choice(self.button1, self.button2)
 
-        ## TESTER: Rebind left click
+        ## TESTER: Rebind left click story progress
         self.tk.bind("<Button-1>", self.click_Handler)
 
     ## SFX Keyword Handler: Call Sound_Manager to play sound effect
