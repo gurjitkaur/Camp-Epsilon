@@ -164,11 +164,11 @@ class GUI_Manager2:
         self.dialog_text.pack()
 
     ## Print the background
-    def print_background(self, image):
-        bkg_photo = PhotoImage(file = image)
-        image_label = Label(self.bkg_frame, image = bkg_photo)
-        image_label.photo = bkg_photo
-        image_label.pack()
+    def print_background(self, background):
+        self.bkg_canvas = Canvas(self.bkg_frame, width = 450, height = 500)      #Set canvas for background
+        self.bkg_canvas.pack(expand = YES, fill = BOTH, side = LEFT)        #Pack canvas     
+        self.bkg = PhotoImage(file = background)                            #Set background file
+        self.bkg_canvas.create_image(0,0, image = self.bkg, anchor = NW)    #Place background on the canvas
         
     ## Display the player choices
     def display_choice(self, button1, button2, choice1, choice2):
