@@ -92,3 +92,18 @@ class UserFile_Handler():
 		
 	def fileIsEmpty(self, filename):
 		return os.stat(filename).st_size == 0
+
+	def deleteFile(self, fileName):
+		if(self.fileIsEmpty("SaveFile.txt")):
+			return False
+
+		fd = open("SaveFile.txt", 'r+')
+		file = fd.readlines()
+		fd.seek(0)
+		for line in file:
+			currName = line.split("_")
+			if(currName[0] != fileName):
+				fd.write(line)
+		fd.truncate()
+		fd.close()
+		return True

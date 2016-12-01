@@ -87,28 +87,30 @@ class GUI_Manager2:
 
 
     #Method that creates popup window for file name entry. Changes start screen to game screen
-    def newGame(self, entry, instruction, entryBox, buttonConfirm, buttonReturn):
+    def newGame(self, entry_frame, instruction, entryBox, buttonConfirm, buttonReturn):
         ## Set Font
         buttonFont = tkFont.Font(size = 15)                             #create custom font for buttons
 
         ## Entry Toplevel window
-        entry.config(height = 250, width = 300)      #Create new window
-        entry.title("Please enter your name:")                                #Set title of window. Text thats on top left of window
-        entry.resizable(height = False, width = False)             #Make window not resizable
+        entry_frame.config(height = self.mainFrameHeight, width = self.mainFrameWidth)      #Overlay frame on top of main_frame                              #Make window not resizable
 
         ## Player prompt and entry box
-        entryBox.place(x = 0,y = 50)                                      #place entry in frame
+        instruction.config(text = "Please enter your name: ")
+        instruction.place(relx = 0.42, rely = 0.4)
+        entryBox.place(relx = 0.42, rely = 0.45)                                      #place entry in frame
 
         ## Confirm button
         buttonConfirm.config(text = "Ok", font  = buttonFont)                   #create button for player
-        buttonConfirm.place(x = 125,y = 135)                                    #Set buttons
+        buttonConfirm.place(relx = 0.42, rely = 0.5)                                    #Set buttons
 
         ## Return button
         buttonReturn.config(text = "Return to Menu", font  = buttonFont)    #create button for returning to start screen
-        buttonReturn.place(x = 90, y = 185)                                 #place button to popup window
+        buttonReturn.place(relx = 0.48, rely = 0.5)                                 #place button to popup window
+
+        entry_frame.pack()
 
     def loadMenu(self, loadMenu_frame, namesList, loadButtonList, fileCount, backButton):
-        ##Overlay load frame
+        ##Overlay load frame and configuration
         loadMenu_frame.config(height = self.mainFrameHeight, width = self.mainFrameWidth)
         loadMenu_frame.pack_propagate(False)
         loadMenu_frame.pack()
@@ -124,6 +126,29 @@ class GUI_Manager2:
         ## Display Back Button
         backButton.config(text = "Back", font = buttonFont)
         backButton.pack()
+
+    def loadChoice(self, load_topLevel, nameLabel, loadConfirm_Button, loadDelete_Button, loadCancel_Button):
+        ##Overlay load_topLevel
+        load_topLevel.config(height = 250, width = 300)
+        load_topLevel.resizable(height = False, width = False)
+        ## Font Setup
+        buttonFont = tkFont.Font(size = 15)
+
+        ## Display Labels
+        nameLabel.config()
+        nameLabel.place(relx = 0.25, rely = 0.35)
+
+        ## Display Confirm Button
+        loadConfirm_Button.config(text = "Confirm", font  = buttonFont)
+        loadConfirm_Button.place(relx = 0.1, rely = 0.5) 
+
+        ## Display Delete Button
+        loadDelete_Button.config(text = "Delete", font = buttonFont)
+        loadDelete_Button.place(relx = 0.40, rely = 0.5)
+
+        ## Display Cancel Button
+        loadCancel_Button.config(text = "Cancel", font = buttonFont)
+        loadCancel_Button.place(relx = 0.70, rely = 0.5)
 
     ## Print the dialogue
     def print_dialogue(self, message):
